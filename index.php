@@ -1,16 +1,18 @@
 <?php
 
+use App\Container;
 use App\Controllers;
 use App\Router;
 use App\App;
-use App\View;
 
 require_once "./vendor/autoload.php";
 
 define("VIEW_PATH", __DIR__ . "/src/App/views");
 
 $config = include __DIR__ . "/src/App/config/config.php";
-$router = new Router();
+$container = new Container();
+$router = new Router($container);
+
 
 $router
     ->get("/", [Controllers\Home::class, "index"])

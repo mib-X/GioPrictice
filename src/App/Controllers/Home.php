@@ -2,17 +2,19 @@
 
 namespace App\Controllers;
 
-use App\App;
-use App\Container;
 use App\Services\InvoiceService;
 use App\View;
 use App\Models;
 
 class Home
 {
+    public function __construct(private InvoiceService $invoiceService)
+    {
+    }
+
     public function index(): string
     {
-        (new Container())->get(InvoiceService::class)->process([], 23);
+        $this->invoiceService->process([], 23);
         return View::make('index')->render();
     }
 }
