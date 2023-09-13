@@ -19,6 +19,7 @@ $router
     ->get("/invoice", [Controllers\Invoice::class, "index"])
     ->get("/invoice/create", [Controllers\Invoice::class, "create"])
     ->post("/invoice/create", [Controllers\Invoice::class, "shop"])
+    ->get("/generator", [Controllers\GeneratorController::class, "index"])
 ;
 
 (new App(
