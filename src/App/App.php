@@ -3,14 +3,22 @@
 namespace App;
 
 use App\Exceptions\RouterNotFoundException;
+use App\Services\PaddlePayment;
+use App\Services\PaymentGatewayInterface;
+use App\Services\StripePayment;
 
 class App
 {
     private static DB $db;
 
-    public function __construct(protected Router $router, protected array $request, protected array $config)
-    {
+    public function __construct(
+        Container $container,
+        protected Router $router,
+        protected array $request,
+        protected array $config
+    ) {
         static::$db = new DB($config);
+        $container->set(PaymentGatewayInterface::class, PaddlePayment::class);
     }
     public static function getDB(): DB
     {

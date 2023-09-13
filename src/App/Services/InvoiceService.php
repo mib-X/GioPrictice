@@ -8,14 +8,14 @@ class InvoiceService
 {
     public function __construct(
         protected SaleTaxService $salesTaxService,
-        protected PaymentGatewayService $gatewayService,
+        protected PaymentGatewayInterface $gatewayService,
         protected EmailService $emailService
     ) {
     }
 
     public function process(array $customer, float $amount): bool
     {
-        echo "Invoice is processing";
+        echo "Invoice is processing  <br>";
         $tax = $this->salesTaxService->calculate($amount, $customer);
 
         if (! $this->gatewayService->charge($customer, $amount, $tax)) {

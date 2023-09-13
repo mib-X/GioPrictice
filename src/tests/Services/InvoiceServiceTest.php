@@ -6,7 +6,7 @@ namespace Tests\Services;
 
 use App\Services\EmailService;
 use App\Services\InvoiceService;
-use App\Services\PaymentGatewayService;
+use App\Services\PaymentGatewayInterface;
 use App\Services\SaleTaxService;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +17,7 @@ class InvoiceServiceTest extends TestCase
     {
         //givcn invoice service
         $salesTaxServiceMock = $this->createMock(SaleTaxService::class);
-        $gatewayServiceMock = $this->createMock(PaymentGatewayService::class);
+        $gatewayServiceMock = $this->createMock(PaymentGatewayInterface::class);
         $emailServiceMock = $this->createMock(EmailService::class);
 
         $invoiceService = new InvoiceService(
@@ -44,7 +44,7 @@ class InvoiceServiceTest extends TestCase
     {
         //givcn invoice service
         $salesTaxServiceMock = $this->createMock(SaleTaxService::class);
-        $gatewayServiceMock = $this->createMock(PaymentGatewayService::class);
+        $gatewayServiceMock = $this->createMock(PaymentGatewayInterface::class);
         $emailServiceMock = $this->createMock(EmailService::class);
 
         $invoiceService = new InvoiceService(

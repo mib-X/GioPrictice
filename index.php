@@ -21,4 +21,10 @@ $router
     ->post("/invoice/create", [Controllers\Invoice::class, "shop"])
 ;
 
-(new App($router, ["uri" => $_SERVER['REQUEST_URI'], 'method' => $_SERVER['REQUEST_METHOD']], $config))->run();
+(new App(
+    $container,
+    $router,
+    ["uri" => $_SERVER['REQUEST_URI'], 'method' => $_SERVER['REQUEST_METHOD']],
+    $config
+)
+)->run();

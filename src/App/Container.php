@@ -9,6 +9,7 @@ use App\Exceptions\Container\NotFoundException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use ReflectionClass;
 
 class Container implements ContainerInterface
 {
@@ -18,8 +19,10 @@ class Container implements ContainerInterface
     {
         if ($this->has($id)) {
             $entry = $this->entries[$id];
-
-            return $entry($this);
+            if (is_callable($entry)) {
+                return $entry($this);
+            }
+            $id = $entry;
         }
         return $this->resolve($id);
     }
@@ -29,7 +32,7 @@ class Container implements ContainerInterface
         return isset($this->entries[$id]);
     }
 
-    public function set(string $id, callable $concrete): void
+    public function set(string $id, callable|string $concrete): void
     {
         $this->entries[$id] = $concrete;
     }
@@ -38,7 +41,7 @@ class Container implements ContainerInterface
     {
 
         //1.Изучаем класс, который хотим получить из контейнера
-        $reflectionClass = new \ReflectionClass($id);
+        $reflectionClass = new ReflectionClass($id);
 
         if (! $reflectionClass->isInstantiable()) {
             throw new ContainerException();
@@ -72,7 +75,7 @@ class Container implements ContainerInterface
             if ($type instanceof \ReflectionNamedType && !$type->isBuiltin()) {
                 return $this->get($type->getName());
             }
-            throw new ContainerException("Failed to resolve class $id");
+            throw new ContainerException("Failed to resolve class" . $id);
         }, $parameters);
         return $reflectionClass->newInstanceArgs($dependencies);
     }

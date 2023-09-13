@@ -1,21 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Services;
 
-class PaymentGatewayService
+class StripePayment implements PaymentGatewayInterface
 {
-
-    /**
-     * PaymentGatewayService constructor.
-     */
-    public function __construct()
-    {
-    }
-
     public function charge(array $customer, float $amount, float $tax): bool
     {
+        echo "Charging from Stripe <br>";
         return (bool) mt_rand(0, 1);
     }
 }
