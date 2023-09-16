@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Attributes\Route;
 use App\Services\InvoiceService;
 use App\View;
 use App\Models;
@@ -11,7 +12,7 @@ class Home
     public function __construct(private InvoiceService $invoiceService)
     {
     }
-
+    #[Route("/")]
     public function index(): string
     {
         $this->invoiceService->process([], 23);

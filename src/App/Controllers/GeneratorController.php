@@ -2,10 +2,13 @@
 
 namespace App\Controllers;
 
+use App\Attributes\Get;
+use App\Attributes\Route;
 use Generator;
 
 class GeneratorController
 {
+    #[Get('/generator')]
     public function index()
     {
         $generator = $this->lazyrange(1, 15);
