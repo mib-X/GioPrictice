@@ -3,9 +3,11 @@
 namespace App;
 
 use App\Exceptions\RouterNotFoundException;
+use App\Services\CustomMailer;
 use App\Services\PaddlePayment;
 use App\Services\PaymentGatewayInterface;
 use App\Services\StripePayment;
+use Symfony\Component\Mailer\MailerInterface;
 
 class App
 {
@@ -19,6 +21,7 @@ class App
     ) {
         static::$db = new DB($config);
         $container->set(PaymentGatewayInterface::class, PaddlePayment::class);
+        $container->set(MailerInterface::class, fn() => new CustomMailer($_ENV['MAILER_DSN']));
     }
     public static function getDB(): DB
     {
