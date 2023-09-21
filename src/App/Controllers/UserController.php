@@ -6,11 +6,11 @@ namespace App\Controllers;
 
 use App\Attributes\Get;
 use App\Attributes\Post;
+use App\Models\Email;
+use App\Services\EmailService;
 use App\View;
-use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mailer\Transport;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 
 class UserController
 {
@@ -19,12 +19,12 @@ class UserController
     }
 
     #[Get('/users')]
-    public function index()
+    public function index(): string
     {
         return View::make('user/userForm')->render();
     }
     #[Post('/users')]
-    public function sendMail()
+    public function sendMail(): void
     {
         $name = $_POST['name'];
         $email = $_POST['email'];
@@ -34,14 +34,16 @@ class UserController
         $html = View::make('email/welcomehtml', $data)->render();
         $text = View::make('email/welcometext', $data)->render();
 
-        $userMail = (new Email())
-            ->from('test@gio.vagrant.internal')
-            ->to('mib.varbex@gmail.com')
-            ->subject('Welcome!')
-            ->replyTo($email)
-            ->text($text)
-            ->html($html);
 
-        $this->mailer->send($userMail);
+        $queue = new Email();
+        $queue->queue(
+            new Address($email),
+            new Address('gio@test.com'),
+            'Welcome!',
+            $html,
+            $text
+        );
+        $emailService = new EmailService($queue, $this->mailer);
+        $emailService->sendQueuedEmails();
     }
 }

@@ -22,8 +22,6 @@ class InvoiceService
             return false;
         }
 
-        $this->emailService->send($customer, 'receipt');
-
         return true;
     }
 }
