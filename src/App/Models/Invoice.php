@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Exception;
+use PDO;
 
 class Invoice extends Model
 {
@@ -35,6 +36,31 @@ class Invoice extends Model
             );
             $selectStmt->execute([$invoiceId]);
             $invoice = $selectStmt->fetch();
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        return $invoice ?? [];
+    }
+    public function allByStatus(int $status = 0): array
+    {
+        try {
+            $Stmt = $this->db->prepare(/** @lang text */'SELECT id, amount, status 
+                FROM invoices
+                WHERE status = ?');
+            $Stmt->execute([$status]);
+            $invoice = $Stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        return $invoice ?? [];
+    }
+    public function all(): array
+    {
+        try {
+            $Stmt = $this->db->prepare(/** @lang text */'SELECT id, amount, status 
+                FROM invoices');
+            $Stmt->execute([]);
+            $invoice = $Stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             echo $e->getMessage();
         }

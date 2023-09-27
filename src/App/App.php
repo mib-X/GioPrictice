@@ -12,16 +12,22 @@ use Symfony\Component\Mailer\MailerInterface;
 class App
 {
     private static DB $db;
+    protected Config $config;
 
     public function __construct(
-        Container $container,
-        protected Router $router,
-        protected array $request,
-        protected array $config
+        protected Container $container,
+        protected ?Router $router = null,
+        protected array $request = []
+
     ) {
-        static::$db = new DB($config);
-        $container->set(PaymentGatewayInterface::class, PaddlePayment::class);
-        $container->set(MailerInterface::class, fn() => new CustomMailer($_ENV['MAILER_DSN']));
+    }
+    public function init(): self
+    {
+        $this->config = new Config($_ENV);
+        static::$db = new DB($this->config->db);
+        $this->container->set(PaymentGatewayInterface::class, PaddlePayment::class);
+        $this->container->set(MailerInterface::class, fn() => new CustomMailer($this->config->mailer['dsn']));
+        return $this;
     }
     public static function getDB(): DB
     {

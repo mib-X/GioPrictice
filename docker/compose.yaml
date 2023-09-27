@@ -2,6 +2,7 @@ version: 3;
 
 services:
   mailhog:
+    container_name: local-mailhog
     image: mailhog/mailhog
     restart: always
 

@@ -43,7 +43,7 @@ class UserController
             $html,
             $text
         );
-        $emailService = new EmailService($queue, $this->mailer);
-        $emailService->sendQueuedEmails();
+        //emailService = new EmailService($queue, $this->mailer);
+        //$emailService->sendQueuedEmails();
     }
 }

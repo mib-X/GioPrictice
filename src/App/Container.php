@@ -10,6 +10,7 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ReflectionClass;
+use ReflectionException;
 
 class Container implements ContainerInterface
 {
@@ -41,7 +42,11 @@ class Container implements ContainerInterface
     {
 
         //1.Изучаем класс, который хотим получить из контейнера
-        $reflectionClass = new ReflectionClass($id);
+        try {
+            $reflectionClass = new ReflectionClass($id);
+        } catch (ReflectionException $e) {
+            throw new ContainerException($e->getMessage());
+        }
 
         if (! $reflectionClass->isInstantiable()) {
             throw new ContainerException();
@@ -49,15 +54,15 @@ class Container implements ContainerInterface
 
         //2. Получаем его __constructor
 
-        $constuctor = $reflectionClass->getConstructor();
+        $constructor = $reflectionClass->getConstructor();
 
-        if ($constuctor == null) {
+        if ($constructor == null) {
             return $reflectionClass->newInstance();
         }
 
         //3. Изучаем параметры конструктора(возможные зависимости)
 
-        $parameters = $constuctor->getParameters();
+        $parameters = $constructor->getParameters();
 
         if (! $parameters) {
             return $reflectionClass->newInstance();
@@ -78,5 +83,9 @@ class Container implements ContainerInterface
             throw new ContainerException("Failed to resolve class" . $id);
         }, $parameters);
         return $reflectionClass->newInstanceArgs($dependencies);
+    }
+    public function getEntry($id)
+    {
+        return $this->entries[$id];
     }
 }

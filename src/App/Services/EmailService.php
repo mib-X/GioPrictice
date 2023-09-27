@@ -6,14 +6,31 @@ namespace App\Services;
 
 use App\Enums\EmailStatus;
 use App\Models\Email;
+use App\View;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Address;
 
 class EmailService
 {
     public function __construct(protected Email $email, protected MailerInterface $mailer)
     {
     }
-
+    public function registerEmail(array $customer): bool
+    {
+        if (empty($customer['email'])) {
+            return false;
+        }
+        $data['firstname'] = $customer['name'] ?? 'anonymous';
+        $html = View::make('email/welcomehtml', $data)->render();
+        $queue = new Email();
+        $queue->queue(
+            new Address($customer['email']),
+            new Address('mib@test.com'),
+            'Welcome!',
+            $html
+        );
+        return true;
+    }
     public function sendQueuedEmails(): void
     {
         $emails = $this->email->findByEmailStatus(EmailStatus::QUEUE);

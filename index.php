@@ -24,25 +24,20 @@ $router = new Router($container);
 $router->registerRouterFromControllerAttributes([
     Controllers\Home::class,
     Controllers\GeneratorController::class,
-    Controllers\Invoice::class,
+    Controllers\InvoiceController::class,
     Controllers\UserController::class
 ]) ;
 
 //$router
 //    ->get("/", [Controllers\Home::class, "index"])
-//    ->get("/invoice", [Controllers\Invoice::class, "index"])
-//    ->get("/invoice/create", [Controllers\Invoice::class, "create"])
-//    ->post("/invoice/create", [Controllers\Invoice::class, "shop"])
+//    ->get("/invoice", [Controllers\InvoiceController::class, "index"])
+//    ->get("/invoice/create", [Controllers\InvoiceController::class, "create"])
+//    ->post("/invoice/create", [Controllers\InvoiceController::class, "shop"])
 //    ->get("/generator", [Controllers\GeneratorController::class, "index"])
 //;
 
 (new App(
     $container,
     $router,
-    ["uri" => $_SERVER['REQUEST_URI'], 'method' => $_SERVER['REQUEST_METHOD']],
-    ['host' => $_ENV['HOST'],
-        'dbuser' => $_ENV['DB_USER'],
-        'dbname' => $_ENV['DB_NAME'],
-        'dbpass' => $_ENV['DB_PASS']]
-)
-)->run();
+    ["uri" => $_SERVER['REQUEST_URI'], 'method' => $_SERVER['REQUEST_METHOD']]
+))->init()->run();

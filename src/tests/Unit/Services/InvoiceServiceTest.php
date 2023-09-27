@@ -54,11 +54,10 @@ class InvoiceServiceTest extends TestCase
         );
 
         $emailServiceMock->expects($this->once())
-            ->method('send')
+            ->method('registerEmail')
             ->with(
-                ['name' => 'mib-X', 'email' => 'mibX@ukr.net'],
-                'receipt'
-            );
+                ['name' => 'mib-X', 'email' => 'mibX@ukr.net']
+            )->willReturn(true);
         $gatewayServiceMock->method('charge')->willReturn(true);
 
         $customer = ['name' => 'mib-X', 'email' => 'mibX@ukr.net'];

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\DataProviders;
+namespace Tests\Unit\DataProviders;
 
 class RouterDataProvider
 {

@@ -6,14 +6,21 @@ namespace App\Controllers;
 
 use App\Attributes\Get;
 use App\Attributes\Post;
+use App\Enums\InvoiceStatus;
+use App\Models\Invoice;
 use App\View;
 
-class Invoice
+class InvoiceController
 {
     #[Get('/invoice')]
     public function index(): string
     {
-        return (new View('invoice/index'))->render();
+        $invoices = (new Invoice())->all(InvoiceStatus::WAITING);
+        foreach ($invoices as &$invoice) {
+            $invoice['status'] = InvoiceStatus::getName((int) $invoice['status']);
+        }
+
+        return (new View('invoice/index', ['invoices' => $invoices]))->render();
     }
     #[Get('/invoice/create')]
     public function create(): string
