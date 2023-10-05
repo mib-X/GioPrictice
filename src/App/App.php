@@ -11,7 +11,7 @@ use Symfony\Component\Mailer\MailerInterface;
 
 class App
 {
-    private static DB $db;
+    private static DBDoctrine $DBDoctrine;
     protected Config $config;
 
     public function __construct(
@@ -24,14 +24,14 @@ class App
     public function init(): self
     {
         $this->config = new Config($_ENV);
-        static::$db = new DB($this->config->db);
+        static::$DBDoctrine = new DBDoctrine($this->config);
         $this->container->set(PaymentGatewayInterface::class, PaddlePayment::class);
         $this->container->set(MailerInterface::class, fn() => new CustomMailer($this->config->mailer['dsn']));
         return $this;
     }
-    public static function getDB(): DB
+    public static function getDB(): DBDoctrine
     {
-        return static::$db;
+        return static::$DBDoctrine;
     }
     public function run()
     {

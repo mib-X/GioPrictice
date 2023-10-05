@@ -8,8 +8,8 @@
     <title>Shop</title>
 </head>
 <body>
-<?php if (isset($amount)) {
-    echo $amount;
+<?php if (isset($amount) and isset($id)) {
+    echo "Invoice with amount " . $amount . " добавлен под id = " . $id ;
 } ?>
 </body>
 </html>

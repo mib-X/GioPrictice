@@ -21,23 +21,22 @@ class UserController
     #[Get('/users')]
     public function index(): string
     {
-        return View::make('user/userForm')->render();
+        return View::make('user/userForm');
     }
     #[Post('/users')]
     public function sendMail(): void
     {
-        $name = $_POST['name'];
-        $email = $_POST['email'];
+        $name = htmlentities($_POST['name'], ENT_QUOTES);
+        $email = htmlentities($_POST['email'], ENT_QUOTES);
         $firstname = explode(" ", $name)[0];
 
         $data['firstname'] = $firstname;
-        $html = View::make('email/welcomehtml', $data)->render();
-        $text = View::make('email/welcometext', $data)->render();
-
+        $html = View::make('email/welcomehtml', $data);
+        $text = View::make('email/welcometext', $data);
 
         $queue = new Email();
         $queue->queue(
-            new Address($email),
+            new Address(html_entity_decode($email)),
             new Address('gio@test.com'),
             'Welcome!',
             $html,

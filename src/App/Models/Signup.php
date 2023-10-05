@@ -28,11 +28,9 @@ class Signup extends Model
             $invoiceId = $this->invoiceModel->create($InvoiceInfo['amount'], $userId);
 
             $this->db->commit();
-        } catch (\PDOException $e) {
-            if ($this->db->inTransaction()) {
+        } catch (\Exception $e) {
                 $this->db->rollBack();
                 echo 'Something goes Wrong.  ' . $e->getMessage() . " Code: " . $e->getCode();
-            }
         }
         return $invoiceId;
     }

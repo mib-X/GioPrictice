@@ -12,30 +12,34 @@ class Invoice extends Model
     public function create(float $amount, int $user_id): int
     {
         try {
-            $newInvoiceStmt = $this->db->prepare(/** @lang text */ "INSERT INTO invoices (amount, user_id) 
-                VALUES (?, ?)");
-            $newInvoiceStmt->execute([$amount, $user_id]);
+            $queryBuilder = $this->db->createQueryBuilder();
+            $queryBuilder->insert('invoices')
+                ->values([
+                    'amount' => '?',
+                    'user_id' => '?',
+                ])
+                ->setParameters([
+                    '0' => $amount,
+                    '1' => $user_id
+                ]);
+            $queryBuilder->executeQuery();
         } catch (Exception $e) {
             echo $e->getMessage();
         }
-        $newInvoiceStmt = $this->db->prepare(/** @lang text */"INSERT INTO invoices (amount, user_id) 
-                VALUES (?, ?)");
-        $newInvoiceStmt->execute([$amount, $user_id]);
         return (int) $this->db->lastInsertId();
     }
 
     public function find(int $invoiceId): array
     {
         try {
-            $selectStmt = $this->db->prepare(/** @lang text */
-                'SELECT full_name, email, amount, invoices.id AS invoice_id
+            $sql = (/** @lang text */
+                'SELECT full_name, email, amount, invoices.id AS invoice_id, invoices.status AS invoice_status
                 FROM users
                 INNER JOIN invoices
                 on user_id = users.id
                 WHERE invoices.id = ?'
             );
-            $selectStmt->execute([$invoiceId]);
-            $invoice = $selectStmt->fetch();
+            $invoice = $this->db->executeQuery($sql, [$invoiceId])->fetchAssociative();
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -44,11 +48,17 @@ class Invoice extends Model
     public function allByStatus(int $status = 0): array
     {
         try {
-            $Stmt = $this->db->prepare(/** @lang text */'SELECT id, amount, status 
+//            $stmt = $this->db->prepare('SELECT id, amount, status
+//                FROM invoices
+//                WHERE status = ?');
+//
+            $stmt = $this->db->executeQuery(/** @lang text */
+                'SELECT id, amount, status 
                 FROM invoices
-                WHERE status = ?');
-            $Stmt->execute([$status]);
-            $invoice = $Stmt->fetchAll(PDO::FETCH_ASSOC);
+                WHERE status = ?',
+                [$status]
+            );
+            $invoice = $stmt->fetchAllAssociative();
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -57,10 +67,11 @@ class Invoice extends Model
     public function all(): array
     {
         try {
-            $Stmt = $this->db->prepare(/** @lang text */'SELECT id, amount, status 
-                FROM invoices');
-            $Stmt->execute([]);
-            $invoice = $Stmt->fetchAll(PDO::FETCH_ASSOC);
+            $Stmt = $this->db->createQueryBuilder()
+                ->select('id', 'amount', 'status')
+                ->from('invoices');
+            $invoice = $Stmt->fetchAllAssociative();
+
         } catch (Exception $e) {
             echo $e->getMessage();
         }

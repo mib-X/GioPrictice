@@ -19,7 +19,7 @@ class InvoiceService
 
     public function process(array $customer, float $amount): bool
     {
-        echo "InvoiceController is processing  <br>";
+        echo "Invoice is processing  <br>";
         $tax = $this->salesTaxService->calculate($amount, $customer);
 
         if (! $this->gatewayService->charge($customer, $amount, $tax)) {

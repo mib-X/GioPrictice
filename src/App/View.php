@@ -8,14 +8,14 @@ use App\Exceptions\ViewNotFoundException;
 
 class View
 {
-    public function __construct(
+    protected function __construct(
         protected string $view,
         protected array $params = []
     ) {
     }
-    public static function make($view, $params = []): static
+    public static function make($view, $params = []): string
     {
-        return new static($view, $params);
+        return (new static($view, $params))->render();
     }
     public function render(): string
     {
@@ -31,9 +31,5 @@ class View
         }
 
         return ob_get_clean();
-    }
-    public function __toString(): string
-    {
-        return $this->render();
     }
 }

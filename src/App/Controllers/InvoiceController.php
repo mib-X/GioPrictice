@@ -15,22 +15,36 @@ class InvoiceController
     #[Get('/invoice')]
     public function index(): string
     {
-        $invoices = (new Invoice())->all(InvoiceStatus::WAITING);
+        $invoices = (new Invoice())->all();
         foreach ($invoices as &$invoice) {
             $invoice['status'] = InvoiceStatus::getName((int) $invoice['status']);
         }
 
-        return (new View('invoice/index', ['invoices' => $invoices]))->render();
+        return View::make('invoice/index', ['invoices' => $invoices]);
     }
     #[Get('/invoice/create')]
     public function create(): string
     {
-        return (new View('invoice/create'))->render();
+        return View::make('invoice/create');
     }
     #[Post('/invoice/create')]
     public function shop()
     {
-        $data['amount'] = $_POST['amount'];
-        return (new View('invoice/shop', $data))->render();
+        $user_id = 1;
+        $data['amount'] = htmlentities($_POST['amount'], ENT_QUOTES);
+        $data['id'] = (new Invoice())->create((int) $data['amount'], (int)$user_id);
+        return View::make('invoice/shop', $data);
+    }
+    #[Get('/invoice/find')]
+    public function findInvoice()
+    {
+        return View::make('invoice/find');
+    }
+    #[Post('/invoice/find')]
+    public function infoInvoice()
+    {
+        $id = htmlentities($_POST['id'], ENT_QUOTES);
+        $data['invoice'] = (new Invoice())->find((int) $id);
+        return View::make('invoice/infoInvoice', $data);
     }
 }

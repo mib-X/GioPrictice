@@ -21,7 +21,7 @@ class EmailService
             return false;
         }
         $data['firstname'] = $customer['name'] ?? 'anonymous';
-        $html = View::make('email/welcomehtml', $data)->render();
+        $html = View::make('email/welcomehtml', $data);
         $queue = new Email();
         $queue->queue(
             new Address($customer['email']),
@@ -34,17 +34,18 @@ class EmailService
     public function sendQueuedEmails(): void
     {
         $emails = $this->email->findByEmailStatus(EmailStatus::QUEUE);
+        var_dump($emails);
 
         foreach ($emails as $email) {
             $userMail = (new \Symfony\Component\Mime\Email())
-                ->from(json_decode($email->meta)->from)
-                ->to(json_decode($email->meta)->to)
-                ->subject($email->subject)
-                ->text($email->text_body)
-                ->html($email->html_body);
+                ->from(json_decode($email['meta'])->from)
+                ->to(json_decode($email['meta'])->to)
+                ->subject($email['subject'])
+                ->text($email['text_body'])
+                ->html($email['html_body']);
 
             $this->mailer->send($userMail);
-            $this->email->markEmailSent($email->id);
+            $this->email->markEmailSent((int) $email['id']);
         }
     }
 }
