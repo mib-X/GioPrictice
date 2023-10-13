@@ -17,13 +17,13 @@
         <th>Status</th>
     </tr>
     <?php
-    if (!empty($invoice)) : ?>
+    if (!empty($invoices)) : ?>
         <tr>
-            <td style="width:15%; text-align:center;"><?php echo $invoice['invoice_id']; ?></td>
-            <td style="width:15%; text-align:center;"><?php echo $invoice['full_name']; ?></td>
-            <td style="width:15%; text-align:center;"><?php echo $invoice['amount']; ?></td>
-            <td style="width:15%; text-align:center;"><?php echo $invoice['email']; ?></td>
-            <td style="width:15%; text-align:center;"><?php echo $invoice['invoice_status']; ?></td>
+            <td style="width:15%; text-align:center;"><?php echo $invoices['invoice_id']; ?></td>
+            <td style="width:15%; text-align:center;"><?php echo $invoices['full_name']; ?></td>
+            <td style="width:15%; text-align:center;"><?php echo $invoices['amount']; ?></td>
+            <td style="width:15%; text-align:center;"><?php echo $invoices['email']; ?></td>
+            <td style="width:15%; text-align:center;"><?php echo $invoices['invoice_status']; ?></td>
         </tr>
     <?php endif;?>
 

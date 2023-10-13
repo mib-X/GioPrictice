@@ -23,7 +23,8 @@ class InvoiceStatus
         return match ($value) {
             self::WAITING => 'WAITING',
             self::PAID => 'PAID',
-            self::FAILED => 'FAILED'
+            self::FAILED => 'FAILED',
+            default => 'Wrong status'
         };
     }
 }

@@ -8,6 +8,7 @@ namespace App;
  * @property-read ?array $db
  * @property-read ?array $mailer
  * @property-read ?array $dbDoctrine
+ * @property-read ?array dbEloquent
  */
 class Config
 {
@@ -27,6 +28,16 @@ class Config
                 'password' => $env['DB_PASS'],
                 'driver' => 'pdo_mysql',
             ],
+            'dbEloquent' => [
+                'host' => $_ENV['HOST'],
+                'username' => $_ENV['DB_USER'],
+                'database' => $_ENV['DB_NAME'],
+                'password' => $_ENV['DB_PASS'],
+                'driver' => 'mysql',
+                'charset' => 'utf8',
+                'collation' => 'utf8_unicode_ci',
+                'prefix' => '',
+            ]
         ];
     }
     public function __get(string $name): array

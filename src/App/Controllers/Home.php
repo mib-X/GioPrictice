@@ -3,10 +3,10 @@
 namespace App\Controllers;
 
 use App\Attributes\Route;
-use App\DBDoctrine;
+use App\Enums\InvoiceStatus;
+use App\Models\Eloquent\Invoice;
 use App\Services\InvoiceService;
 use App\View;
-use App\Models;
 
 class Home
 {
@@ -17,6 +17,14 @@ class Home
     public function index(): string
     {
         $this->invoiceService->process([], 23);
-        return View::make('index');
+        $data['invoices'] = Invoice::query()
+        ->join('users', 'users.id', '=', 'user_id')
+            ->select('invoices.id', 'full_name', 'amount', 'email', 'status')
+        ->get()->toArray();
+
+        foreach ($data['invoices'] as &$invoice) {
+            $invoice['status'] = InvoiceStatus::getName((int) $invoice['status']);
+        }
+        return View::make('index', $data);
     }
 }

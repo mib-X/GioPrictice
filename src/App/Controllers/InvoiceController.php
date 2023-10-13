@@ -44,7 +44,7 @@ class InvoiceController
     public function infoInvoice()
     {
         $id = htmlentities($_POST['id'], ENT_QUOTES);
-        $data['invoice'] = (new Invoice())->find((int) $id);
+        $data['invoices'] = (new Invoice())->find((int) $id);
         return View::make('invoice/infoInvoice', $data);
     }
 }
